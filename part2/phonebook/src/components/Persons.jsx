@@ -7,7 +7,8 @@ const Persons = (props) => {
         )
         .map((person) => (
           <div key={person.name}>
-            {person.name} {person.number}
+            {person.name} {person.number}{" "}
+            <button onClick={() => props.removePerson(person.id)}>delete</button>
           </div>
         ))}
     </div>
