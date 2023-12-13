@@ -24,7 +24,7 @@ const App = () => {
     };
 
     persons.some(
-      (person) => JSON.stringify(person) === JSON.stringify(personObject)
+      (person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)
     )
       ? alert(`${personObject.name} is already added to phonebook`)
       : personService.create(personObject).then((returnedPerson) => {
