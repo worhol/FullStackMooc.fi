@@ -24,21 +24,39 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
+    const existingPerson = persons.find((p) => p.name === personObject.name);
 
-    persons.some(
-      (person) =>
-        JSON.stringify(person.name) === JSON.stringify(personObject.name)
-    )
-      ? alert(`${personObject.name} is already added to phonebook`)
-      : personService.create(personObject).then((returnedPerson) => {
-          setPersons(persons.concat(returnedPerson));
-          setSuccessMessage(`Added ${personObject.name}`);
-          setTimeout(() => {
-            setSuccessMessage(null);
-          }, 5000);
-          setNewName("");
-          setNewNumber("");
-        });
+    if (existingPerson) {
+      const updateNumber = window.confirm(
+        `${personObject.name} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (updateNumber) {
+        personService
+          .update(existingPerson.id, personObject)
+          .then((updatedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== existingPerson.id ? person : updatedPerson
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
+    } else {
+      personService.create(personObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setSuccessMessage(`Added ${personObject.name}`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
+        setNewName("");
+        setNewNumber("");
+      });
+    }
   };
 
   const removePerson = (id) => {
