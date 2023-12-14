@@ -3,12 +3,14 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+  const [succesMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPerson) => {
@@ -24,11 +26,16 @@ const App = () => {
     };
 
     persons.some(
-      (person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)
+      (person) =>
+        JSON.stringify(person.name) === JSON.stringify(personObject.name)
     )
       ? alert(`${personObject.name} is already added to phonebook`)
       : personService.create(personObject).then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
+          setSuccessMessage(`Added ${personObject.name}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
           setNewName("");
           setNewNumber("");
         });
@@ -60,6 +67,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={succesMessage} />
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm
