@@ -6,12 +6,17 @@ import countryService from "./services/countries";
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filterName, setFilter] = useState("");
+  // const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     countryService.getAll().then((initialCountry) => {
       setCountries(initialCountry);
     });
   }, []);
+
+  const showCountry = (name)=>{
+    setFilter(name)
+  }
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -20,7 +25,7 @@ const App = () => {
   return (
     <div>
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
-      <Countries filterName={filterName} countries={countries} />
+      <Countries filterName={filterName} countries={countries} showCountry={showCountry}/>
     </div>
   );
 };
