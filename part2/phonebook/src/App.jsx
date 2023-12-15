@@ -44,7 +44,7 @@ const App = () => {
             setNewName("");
             setNewNumber("");
           })
-          .catch((error) => {
+          .catch(() => {
             setErrorMessage(
               `Information of '${existingPerson.name}' has already removed from server`
             );
