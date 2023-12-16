@@ -6,13 +6,30 @@ import countryService from "./services/countries";
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filterName, setFilter] = useState("");
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
     countryService.getAll().then((initialCountry) => {
       setCountries(initialCountry);
     });
   }, []);
-  
+
+  useEffect(() => {
+    const matchingCountry = countries.find(
+      (country) => country.name.common === filterName
+    );
+    if (matchingCountry) {
+      countryService
+        .getWeatherData(matchingCountry)
+        .then((weatherData) => {
+          setWeather(weatherData);
+        })
+        .catch((error) => {
+          console.error("Error fetching weather data:", error);
+        });
+    }
+  }, [countries, filterName]);
+
   const showCountry = (name) => {
     setFilter(name);
   };
@@ -28,6 +45,7 @@ const App = () => {
         filterName={filterName}
         countries={countries}
         showCountry={showCountry}
+        weather={weather}
       />
     </div>
   );

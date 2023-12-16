@@ -1,6 +1,7 @@
 import Country from "./Country";
 
 const Countries = (props) => {
+const weather = props.weather
   const filteredCountries = props.countries.filter((country) =>
     country.name.common.toLowerCase().includes(props.filterName.toLowerCase())
   );
@@ -8,7 +9,7 @@ const Countries = (props) => {
     return <p>Too many matches, specify another filter</p>;
   } else if (filteredCountries.length === 1) {
     return (
-      <Country filteredCountries={filteredCountries}/>
+      <Country filteredCountries={filteredCountries} weather={weather}/>
     );
   }
   return (
