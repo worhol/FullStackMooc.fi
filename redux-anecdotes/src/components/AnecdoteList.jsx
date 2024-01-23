@@ -13,7 +13,7 @@ const AnecdoteList = () => {
   })
 
   const vote = (id) => {
-    dispatch(addVote(id))
+    dispatch(addVote({id}))
   }
   return (
     <div>
