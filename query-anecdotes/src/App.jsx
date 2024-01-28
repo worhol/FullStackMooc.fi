@@ -3,6 +3,7 @@ import Notification from './components/Notification'
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { getAnecdotes, updateAnecdote } from './requests'
 import { useReducer } from 'react'
+import NotificationContext from './NotificationContext'
 
 const notificationReducer = (state, action) => {
   switch (action.type) {
@@ -50,9 +51,9 @@ const App = () => {
   const anecdotes = result.data
   anecdotes.sort((a, b) => b.votes - a.votes)
   return (
-    <div>
+    <NotificationContext.Provider value={[notification, notificationDispatch]}>
+      <div>
       <h3>Anecdote app</h3>
-
       <Notification notification={notification} />
       <AnecdoteForm />
 
@@ -66,6 +67,8 @@ const App = () => {
         </div>
       ))}
     </div>
+    </NotificationContext.Provider>
+    
   )
 }
 
