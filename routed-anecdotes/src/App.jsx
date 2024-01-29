@@ -4,10 +4,11 @@ import {
   Routes,
   Route,
   Link,
-  useMatch
+  useMatch,
+  useNavigate
 } from 'react-router-dom'
 
-const Menu = ({ anecdotes }) => {
+const Menu = ({ anecdotes, addNew, content }) => {
   const padding = {
     paddingRight: 5
   }
@@ -29,10 +30,11 @@ const Menu = ({ anecdotes }) => {
           about
         </Link>
       </div>
+      <Notification content={content} />
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/create" element={<CreateNew />} />
+        <Route path="/create" element={<CreateNew addNew={addNew} />} />
         <Route
           path="/anecdotes/:id"
           element={<Anecdote anecdote={anecdote} />}
@@ -110,7 +112,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
@@ -119,6 +121,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -154,6 +157,14 @@ const CreateNew = (props) => {
     </div>
   )
 }
+const Notification = ({ content }) => {
+  if (content === null) {
+    return null
+  }
+  if (content) {
+    return <div>{`a new anecdote ${content} created!`}</div>
+  }
+}
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -178,6 +189,12 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    if (anecdote.content) {
+      setNotification(anecdote.content)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
@@ -197,7 +214,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Router>
-        <Menu anecdotes={anecdotes} />
+        <Menu anecdotes={anecdotes} addNew={addNew} content={notification} />
       </Router>
     </div>
   )
